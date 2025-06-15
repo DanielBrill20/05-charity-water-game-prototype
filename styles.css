@@ -382,3 +382,27 @@ html, body {
         height: 48px;
     }
 }
+
+/* Water drop rain effect for 50+ points */
+.rain-drop {
+  position: fixed;
+  top: -60px; /* Start above the screen */
+  height: 64px;
+  z-index: 9999;
+  pointer-events: none;
+  animation: drop-fall 2.2s linear forwards;
+}
+
+@keyframes drop-fall {
+  0% {
+    top: -60px;
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    top: 200vh;
+    opacity: 0;
+  }
+}

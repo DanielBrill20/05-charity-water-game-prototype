@@ -113,7 +113,6 @@ function spawnWaterDrop() {
     drop.addEventListener('click', () => {
         if (!gameActive) return;
         score += t.points * multiplier;
-        playWaterSound();
         drop.remove();
         updateStatusBar();
     });
@@ -186,40 +185,35 @@ function endGame(reason) {
     if (multiplierTimeout) clearTimeout(multiplierTimeout);
     showGameOver();
     showMessage(reason);
-    if (score >= 100) showConfetti();
-
+    // If the user scored 50 or more, rain down water drops!
+    if (score >= 50) {
+        rainWaterDrops();
+    }
     // Place status bars correctly
     placeStatusBars();
 }
 
-// Function to play water drop sound (simple beep for now)
-function playWaterSound() {
-    // For beginners: use a simple beep using Web Audio API
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const o = ctx.createOscillator();
-    o.type = 'sine';
-    o.frequency.value = 660;
-    o.connect(ctx.destination);
-    o.start();
-    setTimeout(() => {
-        o.stop();
-        ctx.close();
-    }, 80);
-}
-
-// Function to show confetti (simple emoji for beginners)
-function showConfetti() {
-    for (let i = 0; i < 20; i++) {
-        const confetti = document.createElement('span');
-        confetti.textContent = '🎊';
-        confetti.style.position = 'fixed';
-        confetti.style.left = `${Math.random() * 100}vw`;
-        confetti.style.top = `${Math.random() * 60}vh`;
-        confetti.style.fontSize = '2em';
-        confetti.style.pointerEvents = 'none';
-        confetti.style.zIndex = 2000;
-        document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 1200 + Math.random() * 800);
+// Function to rain down water drop images from the top of the screen
+function rainWaterDrops() {
+    // Number of drops to create
+    const dropCount = 60;
+    // Loop to create each drop
+    for (let i = 0; i < dropCount; i++) {
+        // Create an img element for the water drop
+        const drop = document.createElement('img');
+        drop.src = 'img/Gamer Water Drop.png';
+        drop.alt = 'Water Drop';
+        drop.className = 'rain-drop';
+        // Random horizontal position (0% to 95% of the screen width)
+        drop.style.left = `${Math.random() * 95}%`;
+        // Random delay so drops don't all fall at once
+        drop.style.animationDelay = `${Math.random() * 1.5}s`;
+        // Add the drop to the body so it appears above everything
+        document.body.appendChild(drop);
+        // Remove the drop after the animation ends (2.5s)
+        setTimeout(() => {
+            drop.remove();
+        }, 2500);
     }
 }
 
